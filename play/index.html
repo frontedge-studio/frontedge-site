@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Play | Frontedge Studio</title>
+  <meta name="description" content="Play web-first games built by Frontedge Studio." />
+
+  <link rel="stylesheet" href="../shells/site-shell/site.css" />
+</head>
+
+<body class="hub">
+  <div class="fx" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Header (root structure, hub links) -->
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <a class="brand" href="/" aria-label="Frontedge Studio Home">
+          <img
+            src="/assets/logo-f-128.png"
+            srcset="/assets/logo-f-128.png 1x, /assets/logo-f-256.png 2x"
+            width="34"
+            height="34"
+            alt="Frontedge Studio logo"
+            class="logo"
+            decoding="async"
+            fetchpriority="high"
+          />
+          <div>
+            <div class="brand-name">Frontedge Studio</div>
+            <div class="brand-sub">Focused digital products</div>
+          </div>
+        </a>
+
+        <nav class="primary-nav" aria-label="Primary">
+          <button class="menu-btn" type="button" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <ul class="nav-links">
+            <li><a href="/" data-link="home">Home</a></li>
+            <li><a href="/play/" data-link="play">Play</a></li>
+            <li><a href="/tools/" data-link="tools">Tools</a></li>
+            <li><a href="/labs/" data-link="labs">Labs</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Menu Overlay (root structure, hub links) -->
+  <div class="menu-overlay" id="mobileMenu" aria-hidden="true">
+    <div class="menu-sheet" role="dialog" aria-modal="true" aria-label="Menu">
+      <div class="menu-top">
+        <div class="menu-spacer" aria-hidden="true"></div>
+        <button class="menu-close" type="button" aria-label="Close menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="menu-links" aria-label="Menu links">
+        <a href="/" data-link="home">Home</a>
+        <a href="/play/" data-link="play">Play</a>
+        <a href="/tools/" data-link="tools">Tools</a>
+        <a href="/labs/" data-link="labs">Labs</a>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Hero -->
+    <section class="hero" aria-label="Play hub">
+      <div class="wrap">
+        <div class="hero-grid">
+          <div>
+            <div class="kicker">
+              <span class="kicker-label">Independent studio</span>
+              <span class="edge-streak" aria-hidden="true"></span>
+            </div>
+            <h1 class="h1">Play</h1>
+            <p class="lead">
+              Small web-first games. Quick sessions. Fast restarts. Built for phone and desktop.
+            </p>
+
+            <div class="hero-cta">
+              <a class="btn primary" href="/projects/game-001/play/">Play Game-001</a>
+              <a class="btn" href="/projects/game-002/play/">Play Game-002</a>
+            </div>
+          </div>
+
+          <div class="hero-right">
+            <div class="mini">
+              <div class="mini-title">Now Live</div>
+              <div class="pill-row">
+                <span class="pill">Game-001</span>
+                <span class="pill">Game-002</span>
+                <span class="pill">v1</span>
+              </div>
+              <div class="mini-note">More drops soon.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Games grid -->
+    <section class="section" aria-label="Games">
+      <div class="wrap">
+        <div class="section-title">Games</div>
+        <h2 class="h2">Available now</h2>
+        <p class="lead">Tap a card to launch.</p>
+
+        <div class="projects-grid" style="margin-top:18px;">
+          <!-- Game-001 -->
+          <a class="cat" href="/projects/game-001/play/" aria-label="Play Game-001">
+            <h3>Game 001</h3>
+            <p>One-input survival on a neon-dark field. Tight runs, fast restarts.</p>
+          </a>
+
+          <!-- Game-002 -->
+          <a class="cat" href="/projects/game-002/play/" aria-label="Play Game-002">
+            <h3>Game 002</h3>
+            <p>Shield timing and pressure. Break shards, stay alive, chase the score.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer (root structure, hub links) -->
+  <footer class="site-footer" aria-label="Footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-name">Frontedge Studio</div>
+          <div class="footer-muted">A small studio building focused digital products.</div>
+        </div>
+
+        <div class="footer-links" aria-label="Footer links">
+          <a href="/">Home</a>
+          <a href="/play/">Play</a>
+          <a href="/tools/">Tools</a>
+          <a href="/labs/">Labs</a>
+        </div>
+
+        <div class="footer-meta">
+          <div class="footer-muted">© <span id="year"></span> Frontedge Studio. All rights reserved.</div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../shells/site-shell/site.js"></script>
+</body>
+</html>

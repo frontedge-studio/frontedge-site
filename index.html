@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+
+  <!-- Favicons & App Icons -->
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-light-16x16.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" media="(prefers-color-scheme: dark)">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-light-32x32.png" media="(prefers-color-scheme: light)">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="theme-color" content="#070A10">
+  <meta name="color-scheme" content="dark light">
+
+  <title>Frontedge Studio</title>
+  <meta name="description" content="A small studio building focused digital products.">
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Frontedge Studio">
+  <meta property="og:title" content="Frontedge Studio">
+  <meta property="og:description" content="A small studio building focused digital products.">
+  <meta property="og:image" content="https://frontedgestudio.com/assets/og-image.png">
+  <meta property="og:url" content="https://frontedgestudio.com">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Frontedge Studio">
+  <meta name="twitter:description" content="A small studio building focused digital products.">
+  <meta name="twitter:image" content="https://frontedgestudio.com/assets/og-image.png">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+<link rel="stylesheet" href="./shells/site-shell/site.css">
+</head>
+
+<body>
+  <div class="fx" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header>
+    <div class="wrap">
+      <div class="nav">
+        <a class="brand" href="#home" aria-label="Frontedge Studio Home">
+          <img
+            src="/assets/logo-f-128.png"
+            srcset="/assets/logo-f-128.png 1x, /assets/logo-f-256.png 2x"
+            width="34"
+            height="34"
+            alt="Frontedge Studio logo"
+            class="logo"
+            decoding="async"
+            fetchpriority="high"
+          />
+          <div>
+            <div class="brand-name">Frontedge Studio</div>
+            <div class="brand-sub">Focused digital products</div>
+          </div>
+        </a>
+
+        <nav class="primary-nav" aria-label="Primary">
+          <button class="menu-btn" type="button" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <ul class="nav-links">
+            <li><a href="#home" data-link="home">Home</a></li>
+            <li><a href="#studio" data-link="studio">Studio</a></li>
+            <li><a href="#products" data-link="products">Products</a></li>
+            <li><a href="#projects" data-link="projects">Projects</a></li>
+            <li><a href="#about" data-link="about">About</a></li>
+            <li><a href="#contact" data-link="contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+        <!-- Mobile Menu Overlay -->
+        <div class="menu-overlay" id="mobileMenu" aria-hidden="true">
+          <div class="menu-sheet" role="dialog" aria-modal="true" aria-label="Menu">
+            <div class="menu-top">
+              <div class="menu-spacer" aria-hidden="true"></div>
+              <button class="menu-close" type="button" aria-label="Close menu">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </button>
+            </div>
+            
+            <div class="menu-links" aria-label="Menu links">
+              <a href="#home" data-link="home">Home</a>
+              <a href="#studio" data-link="studio">Studio</a>
+              <a href="#products" data-link="products">Products</a>
+              <a href="#projects" data-link="projects">Projects</a>
+              <a href="#about" data-link="about">About</a>
+              <a href="#contact" data-link="contact">Contact</a>
+            </div>
+          </div>
+        </div>
+  
+  <!-- HERO -->
+  <main id="home" class="hero">
+    <div class="wrap">
+      <div class="hero-grid">
+        <div>
+          <div class="kicker">
+            <span class="kicker-label">Independent studio</span>
+            <span class="edge-streak" aria-hidden="true"></span>
+          </div>
+
+          <h1>Frontedge Studio</h1>
+          <p class="tagline">A small studio building focused digital products.</p>
+
+          <div class="scroll-cue" aria-hidden="true">
+            <div class="chev">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            Scroll
+          </div>
+        </div>
+
+        <aside class="hero-right" aria-label="Studio snapshot">
+          <div class="hero-metric">
+            <div class="mini">
+              <div class="mini-top">
+                <div class="mini-title">Focus</div>
+                <div class="pill">Small by design</div>
+              </div>
+              <div class="mini-body">Clear scope, fast iteration, and deliberate constraints.</div>
+            </div>
+            <div class="mini">
+              <div class="mini-top">
+                <div class="mini-title">Work</div>
+                <div class="pill">Play · Tools · Labs</div>
+              </div>
+              <div class="mini-body">Games, utility apps, and experiments that stand on their own.</div>
+            </div>
+            <div class="mini">
+              <div class="mini-top">
+                <div class="mini-title">Now</div>
+                <div class="pill">v1 building</div>
+              </div>
+              <div class="mini-body">Two games shipped. Third in progress. Tools coming next.</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </main>
+
+  <!-- STUDIO IDENTITY -->
+  <section id="studio" class="section">
+    <div class="wrap">
+      <div class="section-title">Studio</div>
+      <h2 class="h2">Built for focus.</h2>
+      <p class="lead">
+        We build small, focused digital products with clear purpose.<br />
+        Our work is guided by simplicity, fast iteration, and thoughtful constraints rather than scale for its own sake.<br />
+        Each project is designed to stand on its own, whether it is a game, an app, or an experiment.
+      </p>
+
+      <div class="philo" style="margin-top:18px;">
+        <div class="principles">
+          <div class="row">
+            <div class="k">Small by design</div>
+            <div class="v">Scope is intentionally constrained so ideas can ship, learn, and evolve.</div>
+          </div>
+          <div class="row">
+            <div class="k">Focused outcomes</div>
+            <div class="v">Every product exists to do one thing well, without unnecessary complexity.</div>
+          </div>
+          <div class="row">
+            <div class="k">Built to last</div>
+            <div class="v">Projects are made to age gracefully and remain useful over time.</div>
+          </div>
+        </div>
+
+        <div class="quote">
+          <div class="section-title" style="margin:0 0 10px 0;">Note</div>
+          This site is designed to scale. When the catalog grows, “Play” becomes its own page and this landing stays curated.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT YOU BUILD -->
+  <section id="products" class="section">
+    <div class="wrap">
+      <div class="section-title">Products</div>
+      <h2 class="h2">What we build</h2>
+      <p class="lead">Three lanes, each with a clean purpose.</p>
+
+      <div class="projects-grid" style="margin-top:18px;">
+        <a class="cat" href="/play/" aria-label="Go to Play hub">
+          <h3>Play</h3>
+          <p>Small games built around focused mechanics, tight feedback loops, and deliberate pacing.</p>
+        </a>
+
+        <a class="cat" href="/tools/" aria-label="Go to Tools hub">
+          <h3>Tools</h3>
+          <p>Purpose-built apps designed to solve one problem clearly, efficiently, and without excess.</p>
+        </a>
+
+        <a class="cat" href="/labs/" aria-label="Go to Labs hub">
+          <h3>Labs</h3>
+          <p>Experiments and prototypes used to explore ideas before they evolve into finished products.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PROJECTS -->
+  <section id="projects" class="section">
+    <div class="wrap">
+      <div class="section-title">Projects</div>
+      <h2 class="h2">Featured Projects</h2>
+      <p class="lead">A curated view of what we are building right now.</p>
+
+      <div class="projects-grid">
+        <!-- Replace these with real projects as you finalize them -->
+        <a class="card" href="/projects/game-001/play/" aria-label="Play Game 001">
+          <div class="card-top">
+            <span class="tag">Play</span>
+            <span class="status">Released</span>
+          </div>
+          <h4>Game 001</h4>
+          <p>Minimal, high-signal arcade loop built for quick sessions and clean replay.</p>
+          <div class="card-bottom">
+            <span>Web-first</span>
+            <span class="arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="card" href="/projects/game-002/play/" aria-label="Play Game 002">
+          <div class="card-top">
+            <span class="tag">Play</span>
+            <span class="status">Released</span>
+          </div>
+          <h4>Game 002</h4>
+          <p>Timing-focused survival design with deliberate pressure and fast iteration.</p>
+          <div class="card-bottom">
+            <span>Web-first</span>
+            <span class="arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+
+        <a class="card" href="/play/" aria-label="View Play hub (Game 003 coming soon)">
+          <div class="card-top">
+            <span class="tag">Play</span>
+            <span class="status">Coming Soon</span>
+          </div>
+          <h4>Game 003</h4>
+          <p>In development. Focused mechanic exploration with a clean, shippable endpoint.</p>
+          <div class="card-bottom">
+            <span>In progress</span>
+            <span class="arrow" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M7 17L17 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT / PHILOSOPHY -->
+  <section id="about" class="section">
+    <div class="wrap">
+      <div class="section-title">About</div>
+      <h2 class="h2">How we decide</h2>
+      <p class="lead">A simple filter keeps the work focused and finishable.</p>
+
+      <div class="philo">
+        <div class="quote">
+          We choose projects based on clarity rather than scale.<br />
+          Ideas are pursued only when they can be expressed with tight scope and a clear endpoint.<br />
+          Constraints are used intentionally to force decisions, reduce noise, and keep momentum high.<br />
+          Not every experiment is meant to grow, but every project is expected to reach a finished state.<br />
+          Over time, patterns emerge and the strongest ideas are expanded, while others remain complete as they are.
+        </div>
+
+        <div class="principles">
+          <div class="row">
+            <div class="k">Ship a complete thing</div>
+            <div class="v">A small finished product beats a large unfinished idea.</div>
+          </div>
+          <div class="row">
+            <div class="k">Reduce noise early</div>
+            <div class="v">Constraints make choices easier and outcomes clearer.</div>
+          </div>
+          <div class="row">
+            <div class="k">Earn expansion</div>
+            <div class="v">Scale only after the core loop proves itself.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT / CONNECT -->
+  <section id="contact" class="section">
+    <div class="wrap">
+      <div class="section-title">Contact</div>
+      <h2 class="h2">Connect</h2>
+      <p class="lead">A simple way to reach us, plus social placeholders for future channels.</p>
+
+      <div class="connect">
+        <div class="contact-card">
+          <div class="section-title" style="margin:0 0 10px 0;">Email</div>
+          <div>For inquiries, collaborations, or questions, reach out directly.</div>
+          <a class="email" href="mailto:contact@frontedgestudio.com">
+            <span style="font-weight:620;">contact@frontedgestudio.com</span>
+            <small>mailto</small>
+          </a>
+        </div>
+
+        <div class="contact-card">
+          <div class="section-title" style="margin:0 0 10px 0;">Socials</div>
+          <div style="color:rgba(234,240,255,.72); font-size:13px; line-height:1.45;">
+            Placeholders below. Replace each <code style="background:rgba(234,240,255,.06); padding:2px 6px; border-radius:8px; border:1px solid rgba(234,240,255,.10);">href</code> when accounts are created.
+          </div>
+
+          <div class="socials" aria-label="Social links">
+            <!-- Core studio channels -->
+            <a class="icon-link" href="#" aria-label="Discord (placeholder)" title="Discord">
+              <!-- Chat bubble -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M21 15a4 4 0 0 1-4 4H8l-5 3V7a4 4 0 0 1 4-4h10a4 4 0 0 1 4 4v8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <a class="icon-link" href="#" aria-label="Reddit (placeholder)" title="Reddit">
+              <!-- Simple circle -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 20c4.4 0 8-2.9 8-6.5S16.4 7 12 7 4 9.9 4 13.5 7.6 20 12 20z" stroke="currentColor" stroke-width="2"/>
+                <path d="M9.5 13.8h.01M14.5 13.8h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                <path d="M9.8 16.2c.8.7 1.7 1 2.2 1s1.4-.3 2.2-1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </a>
+            <a class="icon-link" href="#" aria-label="GitHub (placeholder)" title="GitHub">
+              <!-- Octocat-ish circle -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-3 .7-3.7-1.2-3.7-1.2-.5-1.2-1.2-1.5-1.2-1.5-1-.7.1-.7.1-.7 1.1.1 1.7 1.1 1.7 1.1 1 .1 1.9-.7 2.3-1.2.1-.7.4-1.2.7-1.5-2.4-.3-4.9-1.2-4.9-5.3 0-1.2.4-2.2 1.1-3-.1-.3-.5-1.4.1-2.9 0 0 .9-.3 3 1.1.9-.2 1.8-.3 2.7-.3.9 0 1.8.1 2.7.3 2.1-1.4 3-1.1 3-1.1.6 1.5.2 2.6.1 2.9.7.8 1.1 1.8 1.1 3 0 4.1-2.5 5-4.9 5.3.4.3.8 1 .8 2v3c0 .3.2.6.7.5A10 10 0 0 0 12 2z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+
+            <!-- Common public socials -->
+            <a class="icon-link" href="#" aria-label="X (placeholder)" title="X">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </a>
+            <a class="icon-link" href="#" aria-label="Instagram (placeholder)" title="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M16 3H8a5 5 0 0 0-5 5v8a5 5 0 0 0 5 5h8a5 5 0 0 0 5-5V8a5 5 0 0 0-5-5z" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10z" stroke="currentColor" stroke-width="2"/>
+                <path d="M17.5 6.5h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
+            </a>
+            <a class="icon-link" href="#" aria-label="YouTube (placeholder)" title="YouTube">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M22 12s0-4-1-5-5-1-9-1-8 0-9 1-1 5-1 5 0 4 1 5 5 1 9 1 8 0 9-1 1-5 1-5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 9l6 3-6 3V9z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer class="site-footer" aria-label="Footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-name">Frontedge Studio</div>
+        <div class="footer-muted">A small studio building focused digital products.</div>
+      </div>
+
+      <div class="footer-links" aria-label="Footer links">
+        <a href="#home">Home</a>
+        <a href="#projects">Projects</a>
+        <a href="#contact">Contact</a>
+      </div>
+
+      <div class="footer-meta">
+        <div class="footer-muted">© <span id="year"></span> Frontedge Studio. All rights reserved.</div>
+      </div>
+    </div>
+  </div>
+</footer>
+<script src="./shells/site-shell/site.js"></script>
+</body>
+</html>
