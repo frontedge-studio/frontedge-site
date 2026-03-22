@@ -278,7 +278,7 @@ function renderItems() {
     const historyPanel = fragment.querySelector(".history-panel");
     const historyList = fragment.querySelector(".history-list");
     const holdWrap = fragment.querySelector(".hold-wrap");
-    const holdProgressBar = fragment.querySelector(".hold-progress-bar");
+    const holdProgressBar = fragment.querySelector(".hold-ring-fill");
 
     card.dataset.itemId = item.id;
 
@@ -353,7 +353,7 @@ function renderItems() {
       if (item.isImportant) {
         wireHoldToConfirm({
           triggerElement: confirmButton,
-          progressBarElement: holdProgressBar,
+          progressBarElement: holdProgressRing,
           onComplete: () => confirmItem(item.id),
         });
       } else {
@@ -409,24 +409,26 @@ function createButton(label, className) {
   return button;
 }
 
-function wireHoldToConfirm({ triggerElement, progressBarElement, onComplete }) {
+function wireHoldToConfirm({ triggerElement, progressRingElement, onComplete }) {
   let holdTimer = null;
   let isHolding = false;
+
+  const CIRCUMFERENCE = 113.1;
 
   const resetHold = () => {
     clearTimeout(holdTimer);
     holdTimer = null;
     isHolding = false;
-    progressBarElement.style.transition = "width 0ms linear";
-    progressBarElement.style.width = "0%";
+    progressRingElement.style.transition = "stroke-dashoffset 0ms linear";
+    progressRingElement.style.strokeDashoffset = String(CIRCUMFERENCE);
   };
 
   const startHold = () => {
     if (isHolding) return;
     isHolding = true;
 
-    progressBarElement.style.transition = "width 1000ms linear";
-    progressBarElement.style.width = "100%";
+    progressRingElement.style.transition = "stroke-dashoffset 1000ms linear";
+    progressRingElement.style.strokeDashoffset = "0";
 
     holdTimer = window.setTimeout(() => {
       onComplete();
@@ -440,6 +442,8 @@ function wireHoldToConfirm({ triggerElement, progressBarElement, onComplete }) {
   ["mouseup", "mouseleave", "touchend", "touchcancel"].forEach((eventName) => {
     triggerElement.addEventListener(eventName, resetHold);
   });
+
+  resetHold();
 }
 
 function confirmItem(itemId) {
