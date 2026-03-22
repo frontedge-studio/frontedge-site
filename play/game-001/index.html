@@ -1,1 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Lane Change</title>
+  <link rel="stylesheet" href="../../../shells/play-shell/shell.css" />
+</head>
+<body>
+  <canvas id="c"></canvas>
 
+  <div class="hud" id="hud">
+    <div class="pill">Score: <span id="score">0</span></div>
+    <div class="pill">Best: <span id="best">0</span></div>
+    <div class="pill">Level: <span id="lvl">1</span></div>
+  </div>
+
+  <div class="pauseDock" id="pauseDock">
+    <button id="pauseBtnDock" class="pauseDockBtn" aria-label="Pause/Resume">⏸</button>
+    <button id="soundBtnDock" class="pauseDockBtn soundBtn" aria-label="Sound On/Off">🔊</button>
+    <div class="pauseDockText" id="pauseHint">Pause: Space or ⏸</div>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="card">
+      <div class="title" id="ovTitle">Lane Change</div>
+      <div class="sub" id="ovSub"></div>
+
+      <div class="countdownWrap" id="countdownWrap">
+        <div class="countdownNumber" id="countdownNum">5</div>
+        <div class="countdownLabel" id="countdownLabel">Watching Ad…</div>
+      </div>
+
+      <div class="diffWrap" id="diffWrap">
+        <div class="diffLabel">Difficulty</div>
+        <div class="diffButtons">
+          <button class="diffBtn selected" data-k="easy" id="diffEasy">Easy</button>
+          <button class="diffBtn" data-k="normal" id="diffNormal">Normal</button>
+          <button class="diffBtn" data-k="hard" id="diffHard">Hard</button>
+        </div>
+        <div class="small" id="diffExplain"></div>
+      </div>
+
+      <div class="row" style="margin-top:14px;">
+        <button id="continueBtn" class="action">Watch Ad to Continue</button>
+        <button id="primaryBtn" class="action">Start</button>
+      </div>
+
+      <div class="small" id="ovFoot"></div>
+    </div>
+  </div>
+
+  <div class="devPanel" id="devPanel">
+    <div class="devTitle">Dev Metrics</div>
+
+    <div class="devRow"><span>Best score</span><strong id="mBest">0</strong></div>
+    <div class="devRow"><span>Total runs</span><strong id="mRuns">0</strong></div>
+    <div class="devRow"><span>Continues used (this run)</span><strong id="mContinuesRun">0</strong></div>
+    <div class="devRow"><span>Continues granted (lifetime)</span><strong id="mContinuesLife">0</strong></div>
+
+    <div style="height:8px;"></div>
+
+    <div class="devRow"><span>Continue offered</span><strong id="mOffered">0</strong></div>
+    <div class="devRow"><span>Continue clicked</span><strong id="mClicked">0</strong></div>
+    <div class="devRow"><span>Ad completed</span><strong id="mCompleted">0</strong></div>
+    <div class="devRow"><span>Continue granted</span><strong id="mGranted">0</strong></div>
+    <div class="devRow"><span>Offer → Click</span><strong id="mOfferClick">0%</strong></div>
+    <div class="devRow"><span>Click → Complete</span><strong id="mClickComplete">0%</strong></div>
+    <div class="devRow"><span>Offer → Complete</span><strong id="mOfferComplete">0%</strong></div>
+
+    <div class="devHint">Press M to toggle. Press Shift+M to reset.</div>
+  </div>
+
+  <script src="./cfg.js"></script>
+  <script src="./game.js"></script>
+  <script src="../../../shells/play-shell/shell.js"></script>
+</body>
+</html>
