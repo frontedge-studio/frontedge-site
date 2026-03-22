@@ -1,4 +1,4 @@
-const STORAGE_KEY = "confirmly-v4";
+const STORAGE_KEY = "confirmly-v5";
 
 const NOTE_MAX_LENGTH = 300;
 
@@ -303,13 +303,13 @@ function renderItems() {
     });
 
     if (item.archivedAt) {
-      confirmButton.disabled = true;
       holdWrap.classList.add("hidden");
-      editButton.classList.add("hidden");
 
       archiveOrRestoreButton.addEventListener("click", () => {
         restoreItem(item.id);
       });
+
+      itemActions.append(archiveOrRestoreButton, historyButton);
     } else {
       editButton.addEventListener("click", () => {
         openEditItemModal(item.id);
@@ -330,13 +330,8 @@ function renderItems() {
           confirmItem(item.id);
         });
       }
-    }
 
-    itemActions.append(confirmButton, historyButton);
-    if (!item.archivedAt) {
-      itemActions.append(editButton, archiveOrRestoreButton);
-    } else {
-      itemActions.append(archiveOrRestoreButton);
+      itemActions.append(confirmButton, historyButton, editButton, archiveOrRestoreButton);
     }
 
     const itemEvents = getEventsForItem(item.id).slice(0, 8);
@@ -347,7 +342,9 @@ function renderItems() {
       historyList.innerHTML = itemEvents
         .map((event) => {
           if (event.type === "confirm") {
-            const icon = event.wasImportant ? " ! " : "";
+            const icon = event.wasImportant
+              ? ` <span class="history-important-dot" aria-label="Important confirmation">!</span>`
+              : "";
             const noteText = event.note ? ` — Note: ${escapeHtml(event.note)}` : "";
             return `<li>${escapeHtml(formatFullDateTime(event.createdAt))}${icon}${noteText}</li>`;
           }
