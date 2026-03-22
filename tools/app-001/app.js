@@ -1,4 +1,6 @@
-const STORAGE_KEY = "confirmly-v2";
+const STORAGE_KEY = "confirmly-v3";
+
+const NOTE_MAX_LENGTH = 300;
 
 const notePlaceholders = [
   "Triple checked. Brain can relax now.",
@@ -21,6 +23,7 @@ const defaultItems = [
     notesEnabled: true,
     createdAt: new Date().toISOString(),
     archivedAt: null,
+    sortOrder: 0,
   },
   {
     id: crypto.randomUUID(),
@@ -29,6 +32,7 @@ const defaultItems = [
     notesEnabled: true,
     createdAt: new Date().toISOString(),
     archivedAt: null,
+    sortOrder: 1,
   },
   {
     id: crypto.randomUUID(),
@@ -37,6 +41,7 @@ const defaultItems = [
     notesEnabled: true,
     createdAt: new Date().toISOString(),
     archivedAt: null,
+    sortOrder: 2,
   },
 ];
 
@@ -56,9 +61,9 @@ const elements = {
   itemTemplate: document.getElementById("item-card-template"),
 
   itemModal: document.getElementById("item-modal"),
-  addItemButton: document.getElementById("add-item-button"),
   floatingAddButton: document.getElementById("floating-add-button"),
   viewArchivedButton: document.getElementById("view-archived-button"),
+  helpButton: document.getElementById("help-button"),
   closeItemModalButton: document.getElementById("close-item-modal"),
   cancelItemButton: document.getElementById("cancel-item-button"),
   itemForm: document.getElementById("item-form"),
@@ -73,6 +78,10 @@ const elements = {
   noteForm: document.getElementById("note-form"),
   noteInput: document.getElementById("confirm-note"),
   skipNoteButton: document.getElementById("skip-note-button"),
+  noteCharCount: document.getElementById("note-char-count"),
+
+  helpModal: document.getElementById("help-modal"),
+  closeHelpModalButton: document.getElementById("close-help-modal"),
 };
 
 function loadState() {
@@ -108,12 +117,14 @@ function saveState() {
 }
 
 function getVisibleItems() {
-  return state.items.filter((item) => {
-    if (state.showingArchived) {
-      return Boolean(item.archivedAt);
-    }
-    return !item.archivedAt;
-  });
+  return state.items
+    .filter((item) => {
+      if (state.showingArchived) {
+        return Boolean(item.archivedAt);
+      }
+      return !item.archivedAt;
+    })
+    .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 }
 
 function getActiveItems() {
@@ -173,33 +184,19 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
-function createEvent({ itemId, type, detail, note = "" }) {
+function createEvent({ itemId, type, detail, note = "", wasImportant = false }) {
   state.events.push({
     id: crypto.randomUUID(),
     itemId,
     type,
     detail,
     note,
+    wasImportant,
     createdAt: new Date().toISOString(),
   });
 }
 
 function renderSummary() {
-  const activeItems = getActiveItems();
-  const confirmedTodayCount = activeItems.filter((item) => {
-    const lastEvent = getLastConfirmEventForItem(item.id);
-    if (!lastEvent) return false;
-
-    const last = new Date(lastEvent.createdAt);
-    const now = new Date();
-
-    return (
-      last.getFullYear() === now.getFullYear() &&
-      last.getMonth() === now.getMonth() &&
-      last.getDate() === now.getDate()
-    );
-  }).length;
-
   if (state.showingArchived) {
     const archivedCount = state.items.filter((item) => item.archivedAt).length;
     elements.summaryText.textContent =
@@ -207,18 +204,25 @@ function renderSummary() {
     return;
   }
 
+  const todayCount = state.events.filter((event) => {
+    if (event.type !== "confirm") return false;
+
+    const when = new Date(event.createdAt);
+    const now = new Date();
+
+    return (
+      when.getFullYear() === now.getFullYear() &&
+      when.getMonth() === now.getMonth() &&
+      when.getDate() === now.getDate()
+    );
+  }).length;
+
   elements.summaryText.textContent =
-    activeItems.length === 0
-      ? "No items yet"
-      : `${confirmedTodayCount} of ${activeItems.length} confirmed today`;
+    todayCount === 0 ? "No confirmations today" : `${todayCount} confirmation${todayCount === 1 ? "" : "s"} today`;
 }
 
 function renderItems() {
-  const visibleItems = getVisibleItems().sort((a, b) => {
-    const aLast = getLastConfirmEventForItem(a.id)?.createdAt || a.createdAt || "";
-    const bLast = getLastConfirmEventForItem(b.id)?.createdAt || b.createdAt || "";
-    return bLast.localeCompare(aLast);
-  });
+  const visibleItems = getVisibleItems();
 
   elements.listTitle.textContent = state.showingArchived ? "Archived Items" : "Your Items";
   elements.viewArchivedButton.textContent = state.showingArchived ? "Active Items" : "Archived";
@@ -234,7 +238,7 @@ function renderItems() {
       `
       : `
         <h3>No items yet</h3>
-        <p class="hold-help-text">Add your first item to start using Confirmly.</p>
+        <p class="hold-help-text">Use the + button to add your first item.</p>
       `;
     elements.itemsList.appendChild(empty);
     renderSummary();
@@ -248,15 +252,11 @@ function renderItems() {
     const itemBadge = fragment.querySelector(".item-badge");
     const noteSetting = fragment.querySelector(".item-note-setting");
     const lastConfirmedValue = fragment.querySelector(".item-last-confirmed-value");
-    const confirmButton = fragment.querySelector(".confirm-button");
-    const historyToggleButton = fragment.querySelector(".history-toggle-button");
-    const editButton = fragment.querySelector(".edit-button");
-    const archiveButton = fragment.querySelector(".archive-button");
+    const itemActions = fragment.querySelector(".item-actions");
     const historyPanel = fragment.querySelector(".history-panel");
     const historyList = fragment.querySelector(".history-list");
     const holdWrap = fragment.querySelector(".hold-wrap");
     const holdProgressBar = fragment.querySelector(".hold-progress-bar");
-    const holdHelpText = fragment.querySelector(".hold-help-text");
 
     const lastConfirmEvent = getLastConfirmEventForItem(item.id);
 
@@ -265,8 +265,6 @@ function renderItems() {
     if (item.isImportant) {
       itemBadge.classList.remove("hidden");
       holdWrap.classList.remove("hidden");
-      confirmButton.textContent = "Important Item";
-      holdHelpText.textContent = "Press and hold to confirm";
     }
 
     noteSetting.textContent = item.notesEnabled ? "Notes on" : "Notes off";
@@ -275,40 +273,46 @@ function renderItems() {
       ? `${formatRelativeTime(lastConfirmEvent.createdAt)} · ${formatFullDateTime(lastConfirmEvent.createdAt)}`
       : "Never";
 
-    const itemEvents = getEventsForItem(item.id).slice(0, 8);
+    const confirmButton = createButton(
+      item.archivedAt ? "Archived" : (item.isImportant ? "Important Item" : "Confirm"),
+      item.archivedAt ? "button-secondary" : "button-primary"
+    );
+    confirmButton.type = "button";
 
-    if (itemEvents.length === 0) {
-      historyList.innerHTML = "<li>No history yet.</li>";
-    } else {
-      historyList.innerHTML = itemEvents
-        .map((event) => {
-          const noteText = event.note ? ` — Note: ${escapeHtml(event.note)}` : "";
-          return `<li>${escapeHtml(formatFullDateTime(event.createdAt))} — ${escapeHtml(event.detail)}${noteText}</li>`;
-        })
-        .join("");
-    }
+    const historyButton = createButton("History", "button-secondary");
+    historyButton.type = "button";
 
-    historyToggleButton.addEventListener("click", () => {
+    const editButton = createButton("Edit", "button-secondary");
+    editButton.type = "button";
+
+    const archiveOrRestoreButton = createButton(
+      item.archivedAt ? "Restore" : "Archive",
+      item.archivedAt ? "button-primary" : "button-secondary"
+    );
+    archiveOrRestoreButton.type = "button";
+
+    historyButton.addEventListener("click", () => {
       historyPanel.classList.toggle("hidden");
-      historyToggleButton.textContent = historyPanel.classList.contains("hidden")
+      historyButton.textContent = historyPanel.classList.contains("hidden")
         ? "History"
         : "Hide History";
     });
 
     if (item.archivedAt) {
       confirmButton.disabled = true;
-      confirmButton.textContent = "Archived";
       editButton.disabled = true;
-      archiveButton.textContent = "Archived";
-      archiveButton.disabled = true;
       holdWrap.classList.add("hidden");
-    } else {
-      archiveButton.addEventListener("click", () => {
-        archiveItem(item.id);
-      });
 
+      archiveOrRestoreButton.addEventListener("click", () => {
+        restoreItem(item.id);
+      });
+    } else {
       editButton.addEventListener("click", () => {
         openEditItemModal(item.id);
+      });
+
+      archiveOrRestoreButton.addEventListener("click", () => {
+        archiveItem(item.id);
       });
 
       if (item.isImportant) {
@@ -324,6 +328,38 @@ function renderItems() {
       }
     }
 
+    itemActions.append(confirmButton, historyButton, editButton, archiveOrRestoreButton);
+
+    const itemEvents = getEventsForItem(item.id).slice(0, 8);
+
+    if (itemEvents.length === 0) {
+      historyList.innerHTML = "<li class='history-entry'><p class='history-entry-detail'>No history yet.</p></li>";
+    } else {
+      historyList.innerHTML = itemEvents
+        .map((event) => {
+          const tagHtml =
+            event.type === "confirm"
+              ? `<span class="history-tag ${event.wasImportant ? "history-tag-important" : "history-tag-neutral"}">${event.wasImportant ? "!" : "Standard"}</span>`
+              : "";
+
+          const noteHtml = event.note
+            ? `<p class="history-entry-note">Note: ${escapeHtml(event.note)}</p>`
+            : "";
+
+          return `
+            <li class="history-entry">
+              <div class="history-entry-top">
+                <span class="history-entry-time">${escapeHtml(formatFullDateTime(event.createdAt))}</span>
+                ${tagHtml}
+              </div>
+              <p class="history-entry-detail">${escapeHtml(event.detail)}</p>
+              ${noteHtml}
+            </li>
+          `;
+        })
+        .join("");
+    }
+
     elements.itemsList.appendChild(fragment);
 
     requestAnimationFrame(() => {
@@ -332,6 +368,13 @@ function renderItems() {
   });
 
   renderSummary();
+}
+
+function createButton(label, className) {
+  const button = document.createElement("button");
+  button.textContent = label;
+  button.className = `button ${className}`;
+  return button;
 }
 
 function wireHoldToConfirm({ triggerElement, progressBarElement, onComplete }) {
@@ -375,6 +418,7 @@ function confirmItem(itemId) {
     itemId,
     type: "confirm",
     detail: "Item confirmed",
+    wasImportant: item.isImportant,
   });
 
   const latestEvent = state.events[state.events.length - 1];
@@ -404,21 +448,19 @@ function flashItemCard(itemId) {
 }
 
 function addItem({ name, isImportant, notesEnabled }) {
-  const itemId = crypto.randomUUID();
+  const nextSortOrder =
+    state.items.length === 0
+      ? 0
+      : Math.max(...state.items.map((item) => item.sortOrder ?? 0)) + 1;
 
   state.items.push({
-    id: itemId,
+    id: crypto.randomUUID(),
     name: name.trim(),
     isImportant,
     notesEnabled,
     createdAt: new Date().toISOString(),
     archivedAt: null,
-  });
-
-  createEvent({
-    itemId,
-    type: "edit",
-    detail: "Item created",
+    sortOrder: nextSortOrder,
   });
 
   saveState();
@@ -429,41 +471,9 @@ function updateItem({ id, name, isImportant, notesEnabled }) {
   const item = state.items.find((entry) => entry.id === id);
   if (!item) return;
 
-  const previousName = item.name;
-  const previousImportant = item.isImportant;
-  const previousNotesEnabled = item.notesEnabled;
-
   item.name = name.trim();
   item.isImportant = isImportant;
   item.notesEnabled = notesEnabled;
-
-  if (previousName !== item.name) {
-    createEvent({
-      itemId: item.id,
-      type: "edit",
-      detail: `Item renamed from "${previousName}" to "${item.name}"`,
-    });
-  }
-
-  if (previousImportant !== item.isImportant) {
-    createEvent({
-      itemId: item.id,
-      type: "edit",
-      detail: item.isImportant
-        ? "Important setting turned on"
-        : "Important setting turned off",
-    });
-  }
-
-  if (previousNotesEnabled !== item.notesEnabled) {
-    createEvent({
-      itemId: item.id,
-      type: "edit",
-      detail: item.notesEnabled
-        ? "Notes prompt turned on"
-        : "Notes prompt turned off",
-    });
-  }
 
   saveState();
   renderItems();
@@ -479,6 +489,22 @@ function archiveItem(itemId) {
     itemId,
     type: "archive",
     detail: "Item archived",
+  });
+
+  saveState();
+  renderItems();
+}
+
+function restoreItem(itemId) {
+  const item = state.items.find((entry) => entry.id === itemId);
+  if (!item || !item.archivedAt) return;
+
+  item.archivedAt = null;
+
+  createEvent({
+    itemId,
+    type: "restore",
+    detail: "Item restored",
   });
 
   saveState();
@@ -529,11 +555,18 @@ function getRandomNotePlaceholder() {
   return notePlaceholders[Math.floor(Math.random() * notePlaceholders.length)];
 }
 
+function updateNoteCharCount() {
+  const currentLength = elements.noteInput.value.length;
+  const remaining = NOTE_MAX_LENGTH - currentLength;
+  elements.noteCharCount.textContent = `${remaining} character${remaining === 1 ? "" : "s"} remaining`;
+}
+
 function openNoteModal() {
   elements.noteModal.classList.remove("hidden");
   elements.noteModal.setAttribute("aria-hidden", "false");
   elements.noteInput.value = "";
   elements.noteInput.placeholder = getRandomNotePlaceholder();
+  updateNoteCharCount();
   elements.noteInput.focus();
 }
 
@@ -543,6 +576,7 @@ function closeNoteModal() {
   elements.noteInput.value = "";
   elements.noteInput.placeholder = "";
   state.pendingNoteEventId = null;
+  updateNoteCharCount();
 }
 
 function savePendingNote(noteValue) {
@@ -557,14 +591,26 @@ function savePendingNote(noteValue) {
   renderItems();
 }
 
+function openHelpModal() {
+  elements.helpModal.classList.remove("hidden");
+  elements.helpModal.setAttribute("aria-hidden", "false");
+}
+
+function closeHelpModal() {
+  elements.helpModal.classList.add("hidden");
+  elements.helpModal.setAttribute("aria-hidden", "true");
+}
+
 function wireEvents() {
-  elements.addItemButton.addEventListener("click", openCreateItemModal);
   elements.floatingAddButton.addEventListener("click", openCreateItemModal);
 
   elements.viewArchivedButton.addEventListener("click", () => {
     state.showingArchived = !state.showingArchived;
     renderItems();
   });
+
+  elements.helpButton.addEventListener("click", openHelpModal);
+  elements.closeHelpModalButton.addEventListener("click", closeHelpModal);
 
   elements.closeItemModalButton.addEventListener("click", closeItemModal);
   elements.cancelItemButton.addEventListener("click", closeItemModal);
@@ -573,6 +619,13 @@ function wireEvents() {
     const target = event.target;
     if (target instanceof HTMLElement && target.dataset.closeModal === "true") {
       closeItemModal();
+    }
+  });
+
+  elements.helpModal.addEventListener("click", (event) => {
+    const target = event.target;
+    if (target instanceof HTMLElement && target.dataset.closeHelp === "true") {
+      closeHelpModal();
     }
   });
 
@@ -614,10 +667,13 @@ function wireEvents() {
     closeNoteModal();
   });
 
+  elements.noteInput.addEventListener("input", updateNoteCharCount);
+
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") {
       closeItemModal();
       closeNoteModal();
+      closeHelpModal();
     }
   });
 }
@@ -625,6 +681,7 @@ function wireEvents() {
 function init() {
   loadState();
   wireEvents();
+  updateNoteCharCount();
   renderItems();
 }
 
