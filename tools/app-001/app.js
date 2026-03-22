@@ -353,7 +353,7 @@ function renderItems() {
       if (item.isImportant) {
         wireHoldToConfirm({
           triggerElement: confirmButton,
-          progressBarElement: holdProgressRing,
+          progressRingElement: holdProgressRing,
           onComplete: () => confirmItem(item.id),
         });
       } else {
@@ -415,20 +415,27 @@ function wireHoldToConfirm({ triggerElement, progressRingElement, onComplete }) 
 
   const CIRCUMFERENCE = 113.1;
 
+  if (!triggerElement) return;
+
   const resetHold = () => {
     clearTimeout(holdTimer);
     holdTimer = null;
     isHolding = false;
-    progressRingElement.style.transition = "stroke-dashoffset 0ms linear";
-    progressRingElement.style.strokeDashoffset = String(CIRCUMFERENCE);
+
+    if (progressRingElement) {
+      progressRingElement.style.transition = "stroke-dashoffset 0ms linear";
+      progressRingElement.style.strokeDashoffset = String(CIRCUMFERENCE);
+    }
   };
 
   const startHold = () => {
     if (isHolding) return;
     isHolding = true;
 
-    progressRingElement.style.transition = "stroke-dashoffset 1000ms linear";
-    progressRingElement.style.strokeDashoffset = "0";
+    if (progressRingElement) {
+      progressRingElement.style.transition = "stroke-dashoffset 1000ms linear";
+      progressRingElement.style.strokeDashoffset = "0";
+    }
 
     holdTimer = window.setTimeout(() => {
       onComplete();
