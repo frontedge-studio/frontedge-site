@@ -1,4 +1,4 @@
-const STORAGE_KEY = "confirmly-v5";
+const STORAGE_KEY = "confirmly-v6";
 
 const NOTE_MAX_LENGTH = 300;
 
@@ -52,7 +52,8 @@ const state = {
   pendingGlowItemId: null,
   currentItemMode: "create",
   currentEditingItemId: null,
-  showingArchived: false,
+  currentView: "active",
+  openHistoryItemIds: new Set(),
 };
 
 const elements = {
@@ -63,7 +64,9 @@ const elements = {
 
   itemModal: document.getElementById("item-modal"),
   floatingAddButton: document.getElementById("floating-add-button"),
+  viewActiveButton: document.getElementById("view-active-button"),
   viewArchivedButton: document.getElementById("view-archived-button"),
+  viewAllButton: document.getElementById("view-all-button"),
   helpButton: document.getElementById("help-button"),
   closeItemModalButton: document.getElementById("close-item-modal"),
   cancelItemButton: document.getElementById("cancel-item-button"),
@@ -120,10 +123,9 @@ function saveState() {
 function getVisibleItems() {
   return state.items
     .filter((item) => {
-      if (state.showingArchived) {
-        return Boolean(item.archivedAt);
-      }
-      return !item.archivedAt;
+      if (state.currentView === "active") return !item.archivedAt;
+      if (state.currentView === "archived") return Boolean(item.archivedAt);
+      return true;
     })
     .sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 }
@@ -193,11 +195,30 @@ function createEvent({ itemId, type, detail, note = "", wasImportant = false }) 
   });
 }
 
+function renderViewToggle() {
+  const map = {
+    active: elements.viewActiveButton,
+    archived: elements.viewArchivedButton,
+    all: elements.viewAllButton,
+  };
+
+  Object.values(map).forEach((button) => {
+    button.classList.remove("is-active");
+  });
+
+  map[state.currentView].classList.add("is-active");
+}
+
 function renderSummary() {
-  if (state.showingArchived) {
+  if (state.currentView === "archived") {
     const archivedCount = state.items.filter((item) => item.archivedAt).length;
     elements.summaryText.textContent =
       archivedCount === 0 ? "No archived items" : `${archivedCount} archived item${archivedCount === 1 ? "" : "s"}`;
+    return;
+  }
+
+  if (state.currentView === "all") {
+    elements.summaryText.textContent = `${state.items.length} total item${state.items.length === 1 ? "" : "s"}`;
     return;
   }
 
@@ -221,22 +242,25 @@ function renderSummary() {
 function renderItems() {
   const visibleItems = getVisibleItems();
 
-  elements.listTitle.textContent = state.showingArchived ? "Archived Items" : "Your Items";
-  elements.viewArchivedButton.textContent = state.showingArchived ? "Active Items" : "Archived";
+  elements.listTitle.textContent =
+    state.currentView === "active"
+      ? "Your Items"
+      : state.currentView === "archived"
+      ? "Archived Items"
+      : "All Items";
+
+  renderViewToggle();
   elements.itemsList.innerHTML = "";
 
   if (visibleItems.length === 0) {
     const empty = document.createElement("div");
     empty.className = "item-card";
-    empty.innerHTML = state.showingArchived
-      ? `
-        <h3>No archived items</h3>
-        <p class="hold-help-text">Archived items will appear here.</p>
-      `
-      : `
-        <h3>No items yet</h3>
-        <p class="hold-help-text">Use the + button to add your first item.</p>
-      `;
+    empty.innerHTML =
+      state.currentView === "archived"
+        ? `<h3>No archived items</h3><p class="hold-help-text">Archived items will appear here.</p>`
+        : state.currentView === "all"
+        ? `<h3>No items yet</h3><p class="hold-help-text">Items will appear here once created.</p>`
+        : `<h3>No items yet</h3><p class="hold-help-text">Use the + button to add your first item.</p>`;
     elements.itemsList.appendChild(empty);
     renderSummary();
     return;
@@ -259,63 +283,70 @@ function renderItems() {
     card.dataset.itemId = item.id;
 
     const lastConfirmEvent = getLastConfirmEventForItem(item.id);
+    const isArchived = Boolean(item.archivedAt);
 
     itemName.textContent = item.name;
 
-    if (item.isImportant) {
-      itemBadge.classList.remove("hidden");
-      holdWrap.classList.remove("hidden");
-    }
-
-    if (item.archivedAt) {
+    if (isArchived) {
       archivedSetting.classList.remove("hidden");
-    }
+      itemBadge.classList.add("hidden");
+      noteSetting.classList.add("hidden");
+      holdWrap.classList.add("hidden");
+    } else {
+      noteSetting.textContent = item.notesEnabled ? "Notes on" : "Notes off";
+      noteSetting.classList.remove("hidden");
 
-    noteSetting.textContent = item.notesEnabled ? "Notes on" : "Notes off";
+      if (item.isImportant) {
+        itemBadge.classList.remove("hidden");
+        holdWrap.classList.remove("hidden");
+      }
+    }
 
     lastConfirmedValue.textContent = lastConfirmEvent
       ? `${formatRelativeTime(lastConfirmEvent.createdAt)} · ${formatFullDateTime(lastConfirmEvent.createdAt)}`
       : "Never";
 
     const confirmButton = createButton(
-      item.archivedAt ? "Archived" : (item.isImportant ? "Hold to Confirm" : "Confirm"),
-      item.archivedAt ? "button-secondary" : "button-primary"
+      item.isImportant ? "Hold to Confirm" : "Confirm",
+      "button-primary"
     );
-    confirmButton.type = "button";
-
     const historyButton = createButton("History", "button-secondary");
-    historyButton.type = "button";
-
     const editButton = createButton("Edit", "button-secondary");
-    editButton.type = "button";
+    const archiveButton = createButton("Archive", "button-secondary");
+    const restoreButton = createButton("Restore", "button-primary");
 
-    const archiveOrRestoreButton = createButton(
-      item.archivedAt ? "Restore" : "Archive",
-      item.archivedAt ? "button-primary" : "button-secondary"
-    );
-    archiveOrRestoreButton.type = "button";
+    const historyWasOpen = state.openHistoryItemIds.has(item.id);
+    if (historyWasOpen) {
+      historyPanel.classList.remove("hidden");
+      historyButton.textContent = "Hide History";
+    }
 
     historyButton.addEventListener("click", () => {
+      const willOpen = historyPanel.classList.contains("hidden");
       historyPanel.classList.toggle("hidden");
       historyButton.textContent = historyPanel.classList.contains("hidden")
         ? "History"
         : "Hide History";
+
+      if (willOpen) {
+        state.openHistoryItemIds.add(item.id);
+      } else {
+        state.openHistoryItemIds.delete(item.id);
+      }
     });
 
-    if (item.archivedAt) {
-      holdWrap.classList.add("hidden");
-
-      archiveOrRestoreButton.addEventListener("click", () => {
+    if (isArchived) {
+      restoreButton.addEventListener("click", () => {
         restoreItem(item.id);
       });
 
-      itemActions.append(archiveOrRestoreButton, historyButton);
+      itemActions.append(restoreButton, historyButton);
     } else {
       editButton.addEventListener("click", () => {
         openEditItemModal(item.id);
       });
 
-      archiveOrRestoreButton.addEventListener("click", () => {
+      archiveButton.addEventListener("click", () => {
         archiveItem(item.id);
       });
 
@@ -331,7 +362,7 @@ function renderItems() {
         });
       }
 
-      itemActions.append(confirmButton, historyButton, editButton, archiveOrRestoreButton);
+      itemActions.append(confirmButton, historyButton, editButton, archiveButton);
     }
 
     const itemEvents = getEventsForItem(item.id).slice(0, 8);
@@ -374,6 +405,7 @@ function createButton(label, className) {
   const button = document.createElement("button");
   button.textContent = label;
   button.className = `button ${className}`;
+  button.type = "button";
   return button;
 }
 
@@ -605,13 +637,17 @@ function closeHelpModal() {
   elements.helpModal.setAttribute("aria-hidden", "true");
 }
 
+function setView(view) {
+  state.currentView = view;
+  renderItems();
+}
+
 function wireEvents() {
   elements.floatingAddButton.addEventListener("click", openCreateItemModal);
 
-  elements.viewArchivedButton.addEventListener("click", () => {
-    state.showingArchived = !state.showingArchived;
-    renderItems();
-  });
+  elements.viewActiveButton.addEventListener("click", () => setView("active"));
+  elements.viewArchivedButton.addEventListener("click", () => setView("archived"));
+  elements.viewAllButton.addEventListener("click", () => setView("all"));
 
   elements.helpButton.addEventListener("click", openHelpModal);
   elements.closeHelpModalButton.addEventListener("click", closeHelpModal);
