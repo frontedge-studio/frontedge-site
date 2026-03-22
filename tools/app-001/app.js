@@ -278,7 +278,7 @@ function renderItems() {
     const historyPanel = fragment.querySelector(".history-panel");
     const historyList = fragment.querySelector(".history-list");
     const holdWrap = fragment.querySelector(".hold-wrap");
-    const holdProgressBar = fragment.querySelector(".hold-ring-fill");
+    const holdProgressRing = fragment.querySelector(".hold-ring-fill");
 
     card.dataset.itemId = item.id;
 
