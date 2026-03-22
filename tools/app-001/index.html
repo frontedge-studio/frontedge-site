@@ -1,1 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>Confirmly</title>
+  <link rel="stylesheet" href="./app.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">Tool 001</p>
+        <h1>Confirmly</h1>
+      </div>
+      <button id="add-item-button" class="button button-secondary" type="button">
+        + Add Item
+      </button>
+    </header>
 
+    <main class="main-content">
+      <section class="intro-card">
+        <h2>Stop second guessing.</h2>
+        <p>
+          Confirm the things that matter. Tap once for standard items. Hold for important items.
+        </p>
+      </section>
+
+      <section class="list-section">
+        <div class="section-header">
+          <h2>Your Items</h2>
+          <p id="summary-text">Loading items...</p>
+        </div>
+
+        <div id="items-list" class="items-list"></div>
+      </section>
+    </main>
+  </div>
+
+  <div id="item-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-modal="true"></div>
+
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="item-modal-title">
+      <div class="modal-header">
+        <h2 id="item-modal-title">Add Item</h2>
+        <button id="close-item-modal" class="icon-button" type="button" aria-label="Close">
+          ×
+        </button>
+      </div>
+
+      <form id="item-form" class="form-stack">
+        <div class="form-field">
+          <label for="item-name">Item name</label>
+          <input
+            id="item-name"
+            name="itemName"
+            type="text"
+            maxlength="80"
+            placeholder="Example: Locked front door"
+            required
+          />
+        </div>
+
+        <label class="checkbox-row">
+          <input id="item-important" name="itemImportant" type="checkbox" />
+          <span>Mark as important (hold to confirm)</span>
+        </label>
+
+        <label class="checkbox-row">
+          <input id="item-notes" name="itemNotes" type="checkbox" checked />
+          <span>Prompt for a note after confirming</span>
+        </label>
+
+        <div class="form-actions">
+          <button type="button" id="cancel-item-button" class="button button-secondary">
+            Cancel
+          </button>
+          <button type="submit" class="button button-primary">
+            Save Item
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="note-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="note-modal-title">
+      <div class="modal-header">
+        <h2 id="note-modal-title">Add a note?</h2>
+      </div>
+
+      <form id="note-form" class="form-stack">
+        <div class="form-field">
+          <label for="confirm-note">Optional note</label>
+          <textarea
+            id="confirm-note"
+            name="confirmNote"
+            rows="4"
+            maxlength="300"
+            placeholder="Example: Checked all burners and oven."
+          ></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" id="skip-note-button" class="button button-secondary">
+            Skip
+          </button>
+          <button type="submit" class="button button-primary">
+            Save Note
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <template id="item-card-template">
+    <article class="item-card">
+      <div class="item-card-top">
+        <div>
+          <h3 class="item-name"></h3>
+          <div class="item-meta-row">
+            <span class="item-badge hidden">Important</span>
+            <span class="item-note-setting"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="item-status">
+        <p class="item-last-confirmed-label">Last confirmed</p>
+        <p class="item-last-confirmed-value">Never</p>
+      </div>
+
+      <div class="item-actions">
+        <button class="button button-primary confirm-button" type="button">Confirm</button>
+        <button class="button button-secondary history-toggle-button" type="button">History</button>
+      </div>
+
+      <div class="hold-wrap hidden">
+        <div class="hold-progress">
+          <div class="hold-progress-bar"></div>
+        </div>
+        <p class="hold-help-text">Press and hold to confirm</p>
+      </div>
+
+      <div class="history-panel hidden">
+        <h4>Recent history</h4>
+        <ul class="history-list"></ul>
+      </div>
+    </article>
+  </template>
+
+  <script src="./app.js"></script>
+</body>
+</html>
