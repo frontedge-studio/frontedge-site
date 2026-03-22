@@ -21,6 +21,7 @@
     html{ scroll-behavior:smooth; overflow-y: scroll; }
     body{
       margin:0;
+      padding-top: var(--navH);
       font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       background: radial-gradient(1200px 900px at 20% 10%, rgba(124,243,255,.10), transparent 55%),
                   radial-gradient(900px 700px at 85% 15%, rgba(183,166,255,.10), transparent 55%),
@@ -90,8 +91,11 @@
 
 /* Header / Nav */
 header{
-  position:sticky;
-  top:0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
   z-index:50;
   backdrop-filter: blur(14px);
   background: rgba(7,10,16,.62);
@@ -702,7 +706,7 @@ header{
     .icon-link svg{ opacity:.82; }
 
     /* Anchor offset for sticky header */
-    section{ scroll-margin-top: calc(var(--navH) + 18px); }
+    section, main[id]{ scroll-margin-top: calc(var(--navH) + 18px); }
 
     /* Reduce motion */
     @media (prefers-reduced-motion: reduce){
