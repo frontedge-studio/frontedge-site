@@ -12,26 +12,26 @@
 <body>
   <div class="app-shell">
     <header class="topbar">
-      <div>
-        <p class="eyebrow">Tool 001</p>
+      <div class="topbar-left">
         <h1>Confirmly</h1>
       </div>
-      <button id="add-item-button" class="button button-secondary" type="button">
-        + Add Item
-      </button>
+
+      <div class="topbar-actions">
+        <div class="view-toggle" role="tablist" aria-label="Item views">
+          <button id="view-active-button" class="view-toggle-button is-active" type="button">Active</button>
+          <button id="view-archived-button" class="view-toggle-button" type="button">Archived</button>
+          <button id="view-all-button" class="view-toggle-button" type="button">All</button>
+        </div>
+        <button id="help-button" class="icon-button" type="button" aria-label="Help">
+          ?
+        </button>
+      </div>
     </header>
 
     <main class="main-content">
-      <section class="intro-card">
-        <h2>Stop second guessing.</h2>
-        <p>
-          Confirm the things that matter. Tap once for standard items. Hold for important items.
-        </p>
-      </section>
-
       <section class="list-section">
         <div class="section-header">
-          <h2>Your Items</h2>
+          <h2 id="list-title">Your Items</h2>
           <p id="summary-text">Loading items...</p>
         </div>
 
@@ -39,6 +39,10 @@
       </section>
     </main>
   </div>
+
+  <button id="floating-add-button" class="floating-add-button" type="button" aria-label="Add item">
+    +
+  </button>
 
   <div id="item-modal" class="modal hidden" aria-hidden="true">
     <div class="modal-backdrop" data-close-modal="true"></div>
@@ -52,6 +56,8 @@
       </div>
 
       <form id="item-form" class="form-stack">
+        <input type="hidden" id="item-id" />
+
         <div class="form-field">
           <label for="item-name">Item name</label>
           <input
@@ -78,7 +84,7 @@
           <button type="button" id="cancel-item-button" class="button button-secondary">
             Cancel
           </button>
-          <button type="submit" class="button button-primary">
+          <button type="submit" id="save-item-button" class="button button-primary">
             Save Item
           </button>
         </div>
@@ -102,19 +108,46 @@
             name="confirmNote"
             rows="4"
             maxlength="300"
-            placeholder="Example: Checked all burners and oven."
           ></textarea>
+          <div class="field-meta">
+            <span id="note-char-count">300 characters remaining</span>
+          </div>
         </div>
 
-        <div class="form-actions">
-          <button type="button" id="skip-note-button" class="button button-secondary">
+        <div class="form-actions form-actions-compact">
+          <button type="button" id="skip-note-button" class="button button-secondary button-compact">
             Skip
           </button>
-          <button type="submit" class="button button-primary">
+          <button type="submit" class="button button-primary button-compact">
             Save Note
           </button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div id="help-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close-help="true"></div>
+
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="help-modal-title">
+      <div class="modal-header">
+        <h2 id="help-modal-title">How Confirmly works</h2>
+        <button id="close-help-modal" class="icon-button" type="button" aria-label="Close">
+          ×
+        </button>
+      </div>
+
+      <div class="help-content">
+        <p>Confirmly helps you stop second guessing whether you already did something.</p>
+        <ul class="help-list">
+          <li>Tap to confirm standard items.</li>
+          <li>Important items require a press and hold.</li>
+          <li>Notes can be saved with confirmations.</li>
+          <li>Archive hides items you no longer need.</li>
+          <li>Archived items can be restored later.</li>
+          <li>All item history is stored locally in your browser on this device.</li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -126,6 +159,7 @@
           <div class="item-meta-row">
             <span class="item-badge hidden">Important</span>
             <span class="item-note-setting"></span>
+            <span class="item-archived-setting hidden">Archived</span>
           </div>
         </div>
       </div>
@@ -135,17 +169,7 @@
         <p class="item-last-confirmed-value">Never</p>
       </div>
 
-      <div class="item-actions">
-        <button class="button button-primary confirm-button" type="button">Confirm</button>
-        <button class="button button-secondary history-toggle-button" type="button">History</button>
-      </div>
-
-      <div class="hold-wrap hidden">
-        <div class="hold-progress">
-          <div class="hold-progress-bar"></div>
-        </div>
-        <p class="hold-help-text">Press and hold to confirm</p>
-      </div>
+      <div class="item-actions"></div>
 
       <div class="history-panel hidden">
         <h4>Recent history</h4>
