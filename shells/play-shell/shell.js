@@ -523,11 +523,14 @@
 
   // Continue button
   async function runAdCountdown(){
+    const adSlot = document.getElementById("adSlot");
+    if (adSlot) adSlot.style.display = "block";
     const seconds = CFG.rewarded?.countdownSeconds ?? 5;
     for (let i = seconds; i >= 1; i--){
       showAdCountdown(i);
       await new Promise(r => setTimeout(r, 1000));
-    }
+  }
+    if (adSlot) adSlot.style.display = "none";
     Metrics.inc("continue_completed");
     Metrics.inc("continue_granted");
     showAdReady();
