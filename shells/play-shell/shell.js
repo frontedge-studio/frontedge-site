@@ -365,8 +365,11 @@
     }
 
     if (box) {
-      box.setAttribute("style", "width:100%; height:180px; border-radius:12px; background:#1f2937; border:2px solid #ffffff; display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:14px;");
-      box.textContent = "Ad Loading...";
+      box.setAttribute(
+        "style",
+        "width:100%; height:180px; border-radius:12px; background:#2563eb !important; border:4px solid #ffffff !important; display:flex !important; align-items:center !important; justify-content:center !important; color:#ffffff !important; font-size:24px !important; font-weight:700 !important; visibility:visible !important; opacity:1 !important;"
+      );
+      box.textContent = "TEST AD";
     }
   }
 
