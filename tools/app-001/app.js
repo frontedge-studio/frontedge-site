@@ -1,4 +1,4 @@
-const STORAGE_KEY = "confirmly-v6";
+const STORAGE_KEY = "confirmly-v7";
 
 const NOTE_MAX_LENGTH = 300;
 
@@ -277,8 +277,6 @@ function renderItems() {
     const itemActions = fragment.querySelector(".item-actions");
     const historyPanel = fragment.querySelector(".history-panel");
     const historyList = fragment.querySelector(".history-list");
-    const holdWrap = fragment.querySelector(".hold-wrap");
-    const holdProgressRing = fragment.querySelector(".hold-ring-fill");
 
     card.dataset.itemId = item.id;
 
@@ -291,14 +289,12 @@ function renderItems() {
       archivedSetting.classList.remove("hidden");
       itemBadge.classList.add("hidden");
       noteSetting.classList.add("hidden");
-      holdWrap.classList.add("hidden");
     } else {
       noteSetting.textContent = item.notesEnabled ? "Notes on" : "Notes off";
       noteSetting.classList.remove("hidden");
 
       if (item.isImportant) {
         itemBadge.classList.remove("hidden");
-        holdWrap.classList.remove("hidden");
       }
     }
 
@@ -351,9 +347,12 @@ function renderItems() {
       });
 
       if (item.isImportant) {
+        prepareHoldButton(confirmButton);
+        const holdFill = confirmButton.querySelector(".button-hold-fill");
+
         wireHoldToConfirm({
           triggerElement: confirmButton,
-          progressRingElement: holdProgressRing,
+          progressFillElement: holdFill,
           onComplete: () => confirmItem(item.id),
         });
       } else {
@@ -409,11 +408,18 @@ function createButton(label, className) {
   return button;
 }
 
-function wireHoldToConfirm({ triggerElement, progressRingElement, onComplete }) {
+function prepareHoldButton(button) {
+  const label = button.textContent;
+  button.classList.add("button-hold");
+  button.innerHTML = `
+    <span class="button-hold-fill"></span>
+    <span class="button-hold-label">${escapeHtml(label)}</span>
+  `;
+}
+
+function wireHoldToConfirm({ triggerElement, progressFillElement, onComplete }) {
   let holdTimer = null;
   let isHolding = false;
-
-  const CIRCUMFERENCE = 113.1;
 
   if (!triggerElement) return;
 
@@ -422,9 +428,9 @@ function wireHoldToConfirm({ triggerElement, progressRingElement, onComplete }) 
     holdTimer = null;
     isHolding = false;
 
-    if (progressRingElement) {
-      progressRingElement.style.transition = "stroke-dashoffset 0ms linear";
-      progressRingElement.style.strokeDashoffset = String(CIRCUMFERENCE);
+    if (progressFillElement) {
+      progressFillElement.style.transition = "width 0ms linear";
+      progressFillElement.style.width = "0%";
     }
   };
 
@@ -432,9 +438,9 @@ function wireHoldToConfirm({ triggerElement, progressRingElement, onComplete }) 
     if (isHolding) return;
     isHolding = true;
 
-    if (progressRingElement) {
-      progressRingElement.style.transition = "stroke-dashoffset 1000ms linear";
-      progressRingElement.style.strokeDashoffset = "0";
+    if (progressFillElement) {
+      progressFillElement.style.transition = "width 1000ms linear";
+      progressFillElement.style.width = "100%";
     }
 
     holdTimer = window.setTimeout(() => {
