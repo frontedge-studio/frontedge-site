@@ -354,11 +354,14 @@
     countdownLabel.textContent = "Watching Ad…";
     countdownNum.textContent   = String(secondsLeft);
 
-    document.getElementById("adSlot").style.display = "block";
-    document.getElementById("adSlot").style.background = "red";
-    
-    const adSlot = document.getElementById("adSlot");
-    if (adSlot) adSlot.style.display = "block";
+    const ad = document.getElementById("adSlot");
+    if (ad) {
+      ad.style.display = "block";
+      ad.style.position = "relative";
+      ad.style.zIndex = "9999";
+      ad.style.background = "red";
+      ad.style.height = "180px";
+    }
     
     showOverlay();
     syncHud();
