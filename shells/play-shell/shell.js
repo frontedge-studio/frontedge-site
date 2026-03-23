@@ -361,7 +361,7 @@
 
     if (ad) {
       ad.style.cssText = "display:block !important; margin:12px 0; width:100%;";
-      ad.innerHTML = '<div style="width:100%; height:180px; border-radius:12px; background:#2563eb; border:4px solid #ffffff; display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:24px; font-weight:700;">TEST AD</div>';
+      ad.innerHTML = '<div style="width:100%; height:180px; border-radius:12px; background:#1f2937; border:2px solid rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:14px; font-weight:600;">Advertisement</div>';
     }
   }
 
