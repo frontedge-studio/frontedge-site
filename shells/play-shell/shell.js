@@ -353,13 +353,20 @@
     countdownWrap.style.display = "block";
     countdownLabel.textContent = "Watching Ad…";
     countdownNum.textContent   = String(secondsLeft);
- 
+
     showOverlay();
     syncHud();
 
     const ad = document.getElementById("adSlot");
+    const box = document.getElementById("adContainer");
+
     if (ad) {
-      ad.style.display = "block";
+      ad.setAttribute("style", "display:block !important; margin:12px 0; width:100%; min-height:180px;");
+    }
+
+    if (box) {
+      box.setAttribute("style", "width:100%; height:180px; border-radius:12px; background:#1f2937; border:2px solid #ffffff; display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:14px;");
+      box.textContent = "Ad Loading...";
     }
   }
 
