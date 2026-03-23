@@ -354,6 +354,9 @@
     countdownLabel.textContent = "Watching Ad…";
     countdownNum.textContent   = String(secondsLeft);
 
+    document.getElementById("adSlot").style.display = "block";
+    document.getElementById("adSlot").style.background = "red";
+    
     const adSlot = document.getElementById("adSlot");
     if (adSlot) adSlot.style.display = "block";
     
