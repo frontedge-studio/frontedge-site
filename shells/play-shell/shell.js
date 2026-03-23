@@ -358,18 +358,10 @@
     syncHud();
 
     const ad = document.getElementById("adSlot");
-    const box = document.getElementById("adContainer");
 
     if (ad) {
-      ad.setAttribute("style", "display:block !important; margin:12px 0; width:100%; min-height:180px;");
-    }
-
-    if (box) {
-      box.setAttribute(
-        "style",
-        "width:100%; height:180px; border-radius:12px; background:#2563eb !important; border:4px solid #ffffff !important; display:flex !important; align-items:center !important; justify-content:center !important; color:#ffffff !important; font-size:24px !important; font-weight:700 !important; visibility:visible !important; opacity:1 !important;"
-      );
-      box.textContent = "TEST AD";
+      ad.style.cssText = "display:block !important; margin:12px 0; width:100%;";
+      ad.innerHTML = '<div style="width:100%; height:180px; border-radius:12px; background:#2563eb; border:4px solid #ffffff; display:flex; align-items:center; justify-content:center; color:#ffffff; font-size:24px; font-weight:700;">TEST AD</div>';
     }
   }
 
