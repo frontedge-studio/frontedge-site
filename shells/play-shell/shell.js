@@ -356,6 +356,9 @@
 
     showOverlay();
     syncHud();
+
+    const adSlot = document.getElementById("adSlot");
+    if (adSlot) adSlot.style.display = "block";
   }
 
   function showAdReady(){
