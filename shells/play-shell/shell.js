@@ -353,18 +353,14 @@
     countdownWrap.style.display = "block";
     countdownLabel.textContent = "Watching Ad…";
     countdownNum.textContent   = String(secondsLeft);
+ 
+    showOverlay();
+    syncHud();
 
     const ad = document.getElementById("adSlot");
     if (ad) {
       ad.style.display = "block";
-      ad.style.position = "relative";
-      ad.style.zIndex = "9999";
-      ad.style.background = "red";
-      ad.style.height = "180px";
     }
-    
-    showOverlay();
-    syncHud();
   }
 
   function showAdReady(){
@@ -534,11 +530,13 @@
   async function runAdCountdown(){
     const adSlot = document.getElementById("adSlot");
     if (adSlot) adSlot.style.display = "block";
+    
     const seconds = CFG.rewarded?.countdownSeconds ?? 5;
     for (let i = seconds; i >= 1; i--){
       showAdCountdown(i);
       await new Promise(r => setTimeout(r, 1000));
   }
+    
     if (adSlot) adSlot.style.display = "none";
     Metrics.inc("continue_completed");
     Metrics.inc("continue_granted");
