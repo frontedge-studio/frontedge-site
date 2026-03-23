@@ -358,6 +358,7 @@
     syncHud();
 
     const adSlot = document.getElementById("adSlot");
+    console.log("adSlot:", adSlot);
     if (adSlot) adSlot.style.display = "block";
   }
 
